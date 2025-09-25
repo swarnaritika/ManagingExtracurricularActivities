@@ -1,0 +1,15 @@
+{
+  "name": "klu-extracurricular-activities",
+  "version": "1.0.0",
+  "description": "A platform for organizing and managing student extracurricular activities at KLU",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "author": "KLU Student",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

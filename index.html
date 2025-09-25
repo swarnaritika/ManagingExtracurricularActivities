@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLU Extracurricular Activities</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Additional styles for events modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .close-modal:hover {
+            color: #000;
+        }
+        
+        .club-events {
+            margin-top: 20px;
+        }
+        
+        .club-event-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .club-event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .event-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+        
+        .event-meta div {
+            display: flex;
+            align-items: center;
+        }
+        
+        .event-meta i {
+            margin-right: 5px;
+            color: var(--secondary-color);
+        }
+        
+        .event-seats {
+            background-color: #e2e8f0;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .event-seats i {
+            margin-right: 5px;
+            color: var(--primary-color);
+        }
+        
+        .event-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .register-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .register-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .register-btn:disabled {
+            background-color: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .no-events {
+            text-align: center;
+            padding: 30px;
+            color: var(--light-text);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="public/images/KLU LOGO.webp" alt="KLU Logo">
+            <h1>KL University</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="#activities">Activities</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="login.html" class="login-btn" id="loginBtn">Login/Register</a></li>
+            </ul>
+        </nav>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Discover Your Passion</h1>
+            <h2>Join Extracurricular Activities at KLU</h2>
+            <p>Enhance your college experience by participating in various clubs, sports, and events.</p>
+            <a href="login.html" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <section id="activities" class="activities">
+        <h2>Popular Activities</h2>
+        <div class="activities-container">
+            <div class="activity-card" data-category="coding">
+                <div class="activity-icon"><i class="fas fa-code"></i></div>
+                <h3>Coding Club</h3>
+                <p>Enhance your programming skills and participate in coding competitions.</p>
+                <a href="#" class="activity-btn">View Events</a>
+            </div>
+            <div class="activity-card" data-category="sports">
+                <div class="activity-icon"><i class="fas fa-futbol"></i></div>
+                <h3>Sports Teams</h3>
+                <p>Join various sports teams and represent KLU in tournaments.</p>
+                <a href="#" class="activity-btn">View Events</a>
+            </div>
+            <div class="activity-card" data-category="music">
+                <div class="activity-icon"><i class="fas fa-music"></i></div>
+                <h3>Music Club</h3>
+                <p>Showcase your musical talents and perform at university events.</p>
+                <a href="#" class="activity-btn">View Events</a>
+            </div>
+            <div class="activity-card" data-category="art">
+                <div class="activity-icon"><i class="fas fa-paint-brush"></i></div>
+                <h3>Art & Design</h3>
+                <p>Express your creativity through various art forms and exhibitions.</p>
+                <a href="#" class="activity-btn">View Events</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="events" class="events">
+        <h2>Upcoming Events</h2>
+        <div class="events-container">
+            <div class="event-card">
+                <div class="event-date">
+                    <span class="day">15</span>
+                    <span class="month">Aug</span>
+                </div>
+                <div class="event-details">
+                    <h3>Annual Tech Fest</h3>
+                    <p class="event-time"><i class="far fa-clock"></i> 9:00 AM - 5:00 PM</p>
+                    <p class="event-location"><i class="fas fa-map-marker-alt"></i> Main Auditorium</p>
+                    <p class="event-description">Join us for a day of technology, innovation, and fun activities.</p>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-date">
+                    <span class="day">22</span>
+                    <span class="month">Aug</span>
+                </div>
+                <div class="event-details">
+                    <h3>Cultural Night</h3>
+                    <p class="event-time"><i class="far fa-clock"></i> 6:00 PM - 9:00 PM</p>
+                    <p class="event-location"><i class="fas fa-map-marker-alt"></i> Open Air Theatre</p>
+                    <p class="event-description">Experience diverse cultural performances by talented students.</p>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-date">
+                    <span class="day">30</span>
+                    <span class="month">Aug</span>
+                </div>
+                <div class="event-details">
+                    <h3>Sports Tournament</h3>
+                    <p class="event-time"><i class="far fa-clock"></i> 10:00 AM - 4:00 PM</p>
+                    <p class="event-location"><i class="fas fa-map-marker-alt"></i> Sports Complex</p>
+                    <p class="event-description">Cheer for your favorite teams in various sports competitions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <h2>About Our Platform</h2>
+        <div class="about-content">
+            <div class="about-image">
+                <img src="public/images/KLU LOGO.webp" alt="KLU Campus">
+            </div>
+            <div class="about-text">
+                <p>The KLU Extracurricular Activities Platform is designed to help students discover, join, and manage their participation in various activities outside the classroom.</p>
+                <p>Our mission is to enhance the overall college experience by providing opportunities for personal growth, skill development, and networking through extracurricular activities.</p>
+                <p>Whether you're interested in sports, arts, technology, or community service, there's something for everyone at KLU.</p>
+                <a href="login.html" class="about-btn">Join Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Club Events Modal -->
+    <div id="clubEventsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="clubTitle">Club Events</h2>
+            <div id="clubEvents" class="club-events">
+                <!-- Events will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Confirmation Modal -->
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Registration Confirmation</h2>
+            <p id="registrationMessage"></p>
+            <button id="confirmRegistration" class="register-btn">Confirm Registration</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="public/images/KLU LOGO.webp" alt="KLU Logo">
+                <h3>KL University</h3>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#activities">Activities</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="login.html">Login/Register</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> KL University, Vaddeswaram, Guntur District, Andhra Pradesh, India - 522302</p>
+                <p><i class="fas fa-phone"></i> +91 866 2577715</p>
+                <p><i class="fas fa-envelope"></i> info@kluniversity.in</p>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 KL University. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu Toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('nav');
+            
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    nav.classList.toggle('active');
+                    
+                    // Change icon based on menu state
+                    const icon = menuToggle.querySelector('i');
+                    if (nav.classList.contains('active')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+            
+            // Check if user is logged in
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (currentUser && loginBtn) {
+                loginBtn.textContent = 'My Account';
+                // You can add more personalization here based on logged in user
+            }
+            
+            // Club Events Modal
+            const clubEventsModal = document.getElementById('clubEventsModal');
+            const clubTitle = document.getElementById('clubTitle');
+            const clubEvents = document.getElementById('clubEvents');
+            const closeButtons = document.querySelectorAll('.close-modal');
+            
+            // Activity buttons click event
+            const activityButtons = document.querySelectorAll('.activity-btn');
+            activityButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const activityCard = this.closest('.activity-card');
+                    const category = activityCard.getAttribute('data-category');
+                    const title = activityCard.querySelector('h3').textContent;
+                    
+                    clubTitle.textContent = title + ' Events';
+                    loadClubEvents(category);
+                    clubEventsModal.style.display = 'block';
+                });
+            });
+            
+            // Close modal when clicking the close button
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    clubEventsModal.style.display = 'none';
+                    document.getElementById('registrationModal').style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside the modal content
+            window.addEventListener('click', function(e) {
+                if (e.target === clubEventsModal) {
+                    clubEventsModal.style.display = 'none';
+                }
+                if (e.target === document.getElementById('registrationModal')) {
+                    document.getElementById('registrationModal').style.display = 'none';
+                }
+            });
+            
+            // Function to load club events
+            function loadClubEvents(category) {
+                clubEvents.innerHTML = '<p>Loading events...</p>';
+                
+                // In a real app, you would fetch events from an API
+                // For demo purposes, we'll use sample data
+                const events = {
+                    "coding": [
+                        {
+                            id: 1,
+                            title: "Hackathon 2023",
+                            date: "2025-11-15",
+                            time: "9:00 AM - 9:00 PM",
+                            location: "Computer Science Building",
+                            description: "24-hour coding competition to solve real-world problems",
+                            seats: 50,
+                            registered: 32
+                        },
+                        {
+                            id: 2,
+                            title: "Web Development Workshop",
+                            date: "2025-11-22",
+                            time: "2:00 PM - 5:00 PM",
+                            location: "Lab 101",
+                            description: "Learn modern web development techniques with React",
+                            seats: 30,
+                            registered: 18
+                        },
+                        {
+                            id: 3,
+                            title: "Competitive Programming Contest",
+                            date: "2025-11-05",
+                            time: "10:00 AM - 1:00 PM",
+                            location: "Online",
+                            description: "Sharpen your algorithmic skills with this coding contest",
+                            seats: 100,
+                            registered: 45
+                        }
+                    ],
+                    "sports": [
+                        {
+                            id: 4,
+                            title: "Inter-Department Cricket Tournament",
+                            date: "2023-09-18",
+                            time: "3:00 PM - 6:00 PM",
+                            location: "KLU Cricket Ground",
+                            description: "Annual cricket tournament between departments",
+                            seats: 88,
+                            registered: 66
+                        },
+                        {
+                            id: 5,
+                            title: "Basketball Training Camp",
+                            date: "2023-09-25",
+                            time: "4:00 PM - 6:00 PM",
+                            location: "Indoor Sports Complex",
+                            description: "Training camp for basketball enthusiasts",
+                            seats: 20,
+                            registered: 12
+                        }
+                    ],
+                    "music": [
+                        {
+                            id: 6,
+                            title: "Classical Music Night",
+                            date: "2023-09-20",
+                            time: "6:00 PM - 8:00 PM",
+                            location: "Auditorium",
+                            description: "An evening of classical music performances",
+                            seats: 200,
+                            registered: 120
+                        },
+                        {
+                            id: 7,
+                            title: "Band Practice Session",
+                            date: "2023-09-27",
+                            time: "5:00 PM - 7:00 PM",
+                            location: "Music Room",
+                            description: "Practice session for the university band",
+                            seats: 15,
+                            registered: 10
+                        }
+                    ],
+                    "art": [
+                        {
+                            id: 8,
+                            title: "Art Exhibition",
+                            date: "2023-09-30",
+                            time: "10:00 AM - 4:00 PM",
+                            location: "Art Gallery",
+                            description: "Exhibition of student artwork",
+                            seats: 150,
+                            registered: 85
+                        },
+                        {
+                            id: 9,
+                            title: "Photography Workshop",
+                            date: "2023-10-02",
+                            time: "2:00 PM - 5:00 PM",
+                            location: "Design Studio",
+                            description: "Learn photography techniques from professionals",
+                            seats: 25,
+                            registered: 18
+                        }
+                    ]
+                };
+                
+                // Clear current events
+                clubEvents.innerHTML = '';
+                
+                // Check if events exist for the category
+                if (!events[category] || events[category].length === 0) {
+                    clubEvents.innerHTML = '<div class="no-events"><p>No events available for this category at the moment.</p></div>';
+                    return;
+                }
+                
+                // Display events
+                events[category].forEach(event => {
+                    const eventCard = document.createElement('div');
+                    eventCard.className = 'club-event-card';
+                    
+                    const remainingSeats = event.seats - event.registered;
+                    const isFull = remainingSeats <= 0;
+                    
+                    eventCard.innerHTML = `
+                        <div class="club-event-header">
+                            <div>
+                                <h3 class="event-title">${event.title}</h3>
+                                <div class="event-meta">
+                                    <div><i class="far fa-calendar-alt"></i> ${event.date}</div>
+                                    <div><i class="far fa-clock"></i> ${event.time}</div>
+                                    <div><i class="fas fa-map-marker-alt"></i> ${event.location}</div>
+                                </div>
+                            </div>
+                            <div class="event-seats">
+                                <i class="fas fa-user"></i> ${remainingSeats} seats available
+                            </div>
+                        </div>
+                        <p class="event-description">${event.description}</p>
+                        <button class="register-btn" data-id="${event.id}" ${isFull ? 'disabled' : ''}>
+                            ${isFull ? 'Event Full' : 'Register Now'}
+                        </button>
+                    `;
+                    
+                    clubEvents.appendChild(eventCard);
+                });
+                
+                // Add event listeners for registration buttons
+                document.querySelectorAll('.register-btn').forEach(btn => {
+                    if (!btn.disabled) {
+                        btn.addEventListener('click', function() {
+                            const eventId = this.getAttribute('data-id');
+                            
+                            // Check if user is logged in
+                            if (!currentUser) {
+                                alert('Please login to register for events.');
+                                window.location.href = 'login.html';
+                                return;
+                            }
+                            
+                            // Find the event
+                            let selectedEvent = null;
+                            Object.values(events).forEach(categoryEvents => {
+                                const found = categoryEvents.find(e => e.id == eventId);
+                                if (found) selectedEvent = found;
+                            });
+                            
+                            if (selectedEvent) {
+                                // Show registration confirmation modal
+                                const registrationModal = document.getElementById('registrationModal');
+                                const registrationMessage = document.getElementById('registrationMessage');
+                                const confirmRegistration = document.getElementById('confirmRegistration');
+                                
+                                registrationMessage.innerHTML = `
+                                    You are about to register for <strong>${selectedEvent.title}</strong> on ${selectedEvent.date}.<br>
+                                    Please confirm your registration.
+                                `;
+                                
+                                registrationModal.style.display = 'block';
+                                
+                                // Confirm registration button
+                                confirmRegistration.onclick = function() {
+                                    // In a real app, you would make an API call to register the user
+                                    alert(`You have successfully registered for ${selectedEvent.title}!`);
+                                    registrationModal.style.display = 'none';
+                                    clubEventsModal.style.display = 'none';
+                                };
+                            }
+                        });
+                    }
+                });
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') === '#') return;
+                    
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Animation on scroll
+            window.addEventListener('scroll', function() {
+                const elements = document.querySelectorAll('.activity-card, .event-card, .about-content');
+                
+                elements.forEach(element => {
+                    const position = element.getBoundingClientRect();
+                    
+                    // If element is in viewport
+                    if (position.top < window.innerHeight && position.bottom >= 0) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+            
+            // Initialize elements with animation
+            const elements = document.querySelectorAll('.activity-card, .event-card, .about-content');
+            
+            elements.forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            // Trigger initial animation
+            setTimeout(function() {
+                window.dispatchEvent(new Event('scroll'));
+            }, 100);
+        });
+    </script>
+</body>
+</html>
