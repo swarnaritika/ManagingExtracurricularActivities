@@ -48,6 +48,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
+            
+            // --- RECAPTCHA CHECK START (ADDED) ---
+            // Note: grecaptcha.getResponse() checks the first widget by default.
+            // If the login form is visible, we check if the response is empty.
+            if (grecaptcha.getResponse().length === 0) {
+                e.preventDefault();
+                alert("Please verify you are not a robot!");
+                return; // Stop the code here
+            }
+            // --- RECAPTCHA CHECK END ---
+
             e.preventDefault();
             
             const email = document.getElementById('loginEmail').value;
@@ -84,6 +95,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (registerForm) {
         registerForm.addEventListener('submit', function(e) {
+            
+            // --- RECAPTCHA CHECK START (ADDED) ---
+            // Even if we have two widgets, checking getResponse() often catches
+            // if NO widget has been clicked. This is a simple validation.
+            if (grecaptcha.getResponse().length === 0) {
+                e.preventDefault();
+                alert("Please verify you are not a robot!");
+                return;
+            }
+            // --- RECAPTCHA CHECK END ---
+
             e.preventDefault();
             
             const name = document.getElementById('registerName').value;
