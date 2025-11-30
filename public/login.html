@@ -164,6 +164,18 @@
 
     <script src="script.js"></script>
 
-   
+    <script type="text/javascript">
+      var onloadCallback = function() {
+        // Render Login CAPTCHA
+        grecaptcha.render('recaptcha-login', {
+          'sitekey' : '6Le7RBwsAAAAAlpEPqmUk2dQP_nzU5FhlNyiDxl4'
+        });
+        
+        // Render Register CAPTCHA
+        grecaptcha.render('recaptcha-register', {
+          'sitekey' : '6Le7RBwsAAAAAlpEPqmUk2dQP_nzU5FhlNyiDxl4'
+        });
+      };
+    </script>
 </body>
 </html>

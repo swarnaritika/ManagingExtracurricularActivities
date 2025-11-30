@@ -1,10 +1,4 @@
-// Global variables to store the widget IDs
-let loginCaptchaId;
-let registerCaptchaId;
 
-// This function matches the one in login.html
-// It runs automatically when Google reCAPTCHA loads
-window.onloadCallback = function() {
     // Render Login CAPTCHA and save the ID
     const loginDiv = document.getElementById('recaptcha-login');
     if (loginDiv) {
@@ -19,8 +13,7 @@ window.onloadCallback = function() {
         registerCaptchaId = grecaptcha.render('recaptcha-register', {
             'sitekey' : '6Le7RBwsAAAAAlpEPqmUk2dQP_nzU5FhlNyiDxl4'
         });
-    }
-};
+    };
 
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
