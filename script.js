@@ -1,4 +1,27 @@
-// DOM Elements
+// Global variables to store the widget IDs
+let loginCaptchaId;
+let registerCaptchaId;
+
+// This function matches the one in login.html
+// It runs automatically when Google reCAPTCHA loads
+window.onloadCallback = function() {
+    // Render Login CAPTCHA and save the ID
+    const loginDiv = document.getElementById('recaptcha-login');
+    if (loginDiv) {
+        loginCaptchaId = grecaptcha.render('recaptcha-login', {
+            'sitekey' : '6Le7RBwsAAAAAlpEPqmUk2dQP_nzU5FhlNyiDxl4'
+        });
+    }
+    
+    // Render Register CAPTCHA and save the ID
+    const registerDiv = document.getElementById('recaptcha-register');
+    if (registerDiv) {
+        registerCaptchaId = grecaptcha.render('recaptcha-register', {
+            'sitekey' : '6Le7RBwsAAAAAlpEPqmUk2dQP_nzU5FhlNyiDxl4'
+        });
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
     const menuToggle = document.querySelector('.menu-toggle');
@@ -7,8 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (menuToggle) {
         menuToggle.addEventListener('click', function() {
             nav.classList.toggle('active');
-            
-            // Change icon based on menu state
             const icon = menuToggle.querySelector('i');
             if (nav.classList.contains('active')) {
                 icon.classList.remove('fa-bars');
@@ -42,22 +63,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Form Validation
+    // ---------------------------------------------
+    // LOGIN FORM SUBMISSION
+    // ---------------------------------------------
     const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
     
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
             
-            // --- RECAPTCHA CHECK START (ADDED) ---
-            // Note: grecaptcha.getResponse() checks the first widget by default.
-            // If the login form is visible, we check if the response is empty.
-            if (grecaptcha.getResponse().length === 0) {
-                e.preventDefault();
-                alert("Please verify you are not a robot!");
-                return; // Stop the code here
+            // 1. RECAPTCHA VALIDATION (Targeting specific widget)
+            // We use the ID we saved earlier
+            if (loginCaptchaId !== undefined) {
+                const response = grecaptcha.getResponse(loginCaptchaId);
+                if (response.length === 0) {
+                    e.preventDefault();
+                    alert("Please verify you are not a robot!");
+                    return; 
+                }
             }
-            // --- RECAPTCHA CHECK END ---
 
             e.preventDefault();
             
@@ -70,41 +93,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Regular user login
+            // Regular user login logic
             const users = JSON.parse(localStorage.getItem('users')) || [];
             const user = users.find(u => u.email === email && u.password === password);
             
             if (user) {
-                // Set logged in user
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 alert('Login successful! Welcome back, ' + user.name);
                 window.location.href = 'index.html';
             } else {
-                alert('Invalid email or password. Please try again or register if you don\'t have an account.');
+                alert('Invalid email or password. Please try again or register.');
             }
         });
     }
     
-    // Admin login link
-    const adminLoginLink = document.getElementById('adminLoginLink');
-    if (adminLoginLink) {
-        adminLoginLink.addEventListener('click', function(e) {
-            // Just let the link redirect to admin.html
-        });
-    }
-    
+    // ---------------------------------------------
+    // REGISTER FORM SUBMISSION
+    // ---------------------------------------------
+    const registerForm = document.getElementById('registerForm');
+
     if (registerForm) {
         registerForm.addEventListener('submit', function(e) {
             
-            // --- RECAPTCHA CHECK START (ADDED) ---
-            // Even if we have two widgets, checking getResponse() often catches
-            // if NO widget has been clicked. This is a simple validation.
-            if (grecaptcha.getResponse().length === 0) {
-                e.preventDefault();
-                alert("Please verify you are not a robot!");
-                return;
+            // 1. RECAPTCHA VALIDATION (Targeting specific widget)
+            if (registerCaptchaId !== undefined) {
+                const response = grecaptcha.getResponse(registerCaptchaId);
+                if (response.length === 0) {
+                    e.preventDefault();
+                    alert("Please verify you are not a robot!");
+                    return;
+                }
             }
-            // --- RECAPTCHA CHECK END ---
 
             e.preventDefault();
             
@@ -118,43 +137,32 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Validate KLU email format
             if (!validateKLUEmail(email)) {
-                alert('Please enter a valid KLU email address (format: xxxxxxxxxx@kluniversity.in)');
+                alert('Please enter a valid KLU email address');
                 return;
             }
             
-            // Check if passwords match
             if (password !== confirmPassword) {
-                alert('Passwords do not match. Please try again.');
+                alert('Passwords do not match.');
                 return;
             }
             
-            // Check if user already exists
             const users = JSON.parse(localStorage.getItem('users')) || [];
             if (users.some(user => user.email === email)) {
-                alert('An account with this email already exists. Please login instead.');
+                alert('An account with this email already exists.');
                 loginToggle.click();
                 return;
             }
             
-            // Add new user
             const newUser = {
-                name,
-                regNumber,
-                dept,
-                section,
-                email,
-                password,
-                activities: [],
-                events: []
+                name, regNumber, dept, section, email, password,
+                activities: [], events: []
             };
             
             users.push(newUser);
             localStorage.setItem('users', JSON.stringify(users));
-            
-            // Set as current user
             localStorage.setItem('currentUser', JSON.stringify(newUser));
             
-            alert('Registration successful! Welcome to KLU Extracurricular Activities Platform.');
+            alert('Registration successful!');
             window.location.href = 'index.html';
         });
     }
@@ -165,7 +173,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (currentUser && loginBtn) {
         loginBtn.textContent = 'My Account';
-        // You can add more personalization here based on logged in user
+    }
+    
+    // Link to admin page (if exists)
+    const adminLoginLink = document.getElementById('adminLoginLink');
+    if (adminLoginLink) {
+        adminLoginLink.addEventListener('click', function(e) { });
     }
 });
 
@@ -175,32 +188,11 @@ function validateKLUEmail(email) {
     return regex.test(email);
 }
 
-// Smooth scrolling for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-            window.scrollTo({
-                top: targetElement.offsetTop - 80,
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// Animation on scroll (simple implementation)
+// Visual Effects (Scroll Animations)
 window.addEventListener('scroll', function() {
     const elements = document.querySelectorAll('.activity-card, .event-card, .about-content');
-    
     elements.forEach(element => {
         const position = element.getBoundingClientRect();
-        
-        // If element is in viewport
         if (position.top < window.innerHeight && position.bottom >= 0) {
             element.style.opacity = '1';
             element.style.transform = 'translateY(0)';
@@ -208,17 +200,13 @@ window.addEventListener('scroll', function() {
     });
 });
 
-// Initialize elements with animation
 document.addEventListener('DOMContentLoaded', function() {
     const elements = document.querySelectorAll('.activity-card, .event-card, .about-content');
-    
     elements.forEach(element => {
         element.style.opacity = '0';
         element.style.transform = 'translateY(20px)';
         element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     });
-    
-    // Trigger initial animation
     setTimeout(function() {
         window.dispatchEvent(new Event('scroll'));
     }, 100);
